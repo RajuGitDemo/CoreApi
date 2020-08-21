@@ -13,7 +13,7 @@ namespace NetCoreApi.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly DatabaseContext _context ;
 
         public EmployeeController(DatabaseContext context)
         {
