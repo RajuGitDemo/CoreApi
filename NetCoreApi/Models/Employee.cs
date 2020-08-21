@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace NetCoreApi.Models
 {
-
     public class Employee
     {
         public int id { get; set; }
