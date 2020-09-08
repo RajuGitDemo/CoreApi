@@ -60,7 +60,7 @@ namespace NetCoreApi
             //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
             //    RequestPath = new PathString("/Resources")
             //});
-            ///END For File Upload ///
+            ///END For File Upload /////
             app.UseHttpsRedirection();
 
             app.UseRouting();
