@@ -53,14 +53,14 @@ namespace NetCoreApi
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(a => a.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-            ///FOr File Upload 
+            ///FOr File Upload /// 
             app.UseStaticFiles();
             //app.UseStaticFiles(new StaticFileOptions()
             //{
             //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
             //    RequestPath = new PathString("/Resources")
             //});
-            ///END For File Upload
+            ///END For File Upload ///
             app.UseHttpsRedirection();
 
             app.UseRouting();
