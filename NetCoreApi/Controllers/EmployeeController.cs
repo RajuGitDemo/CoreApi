@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +15,7 @@ namespace NetCoreApi.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly DatabaseContext _context ;
+        private readonly DatabaseContext _context;
 
         public EmployeeController(DatabaseContext context)
         {
@@ -28,7 +30,7 @@ namespace NetCoreApi.Controllers
         [HttpGet]
         public ActionResult<Employee> Get(int id)
         {
-            var emp= _context.Employee.FirstOrDefault(a => a.id == id);
+            var emp = _context.Employee.FirstOrDefault(a => a.id == id);
             return Ok(emp);
         }
         [HttpPost]
@@ -42,7 +44,7 @@ namespace NetCoreApi.Controllers
         [HttpPut]
         public ActionResult<Employee> put(Employee employee)
         {
-           var empInDb= _context.Employee.FirstOrDefault(a => a.id == employee.id);
+            var empInDb = _context.Employee.FirstOrDefault(a => a.id == employee.id);
             empInDb.name = employee.name;
             empInDb.email = employee.email;
             empInDb.password = employee.password;
@@ -60,5 +62,43 @@ namespace NetCoreApi.Controllers
             return Ok(emp);
         }
 
+        [HttpGet]
+        [Route("test")]
+        public IActionResult Upload1()
+        {
+            return Ok("hi");
+        }
+
+        [HttpPost, DisableRequestSizeLimit]
+        [Route("upload")]
+        public IActionResult Upload()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine("Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    return Ok(new { dbPath });
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+
+        }
     }
 }

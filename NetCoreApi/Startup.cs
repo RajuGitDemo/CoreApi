@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetCoreApi.Models;
@@ -32,6 +36,13 @@ namespace NetCoreApi
             services.AddCors();
             //services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnectioString.DatabaseContext")));
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer("Server=DESKTOP-J3RI057\\SQLEXPRESS;Database=NetCoreDb;Trusted_Connection=True;"));
+            ///FOr File Upload
+            services.Configure<FormOptions>(o => {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
+            ///END For File Upload
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +52,15 @@ namespace NetCoreApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(a => a.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            ///FOr File Upload
+            app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions()
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+            //    RequestPath = new PathString("/Resources")
+            //});
+            ///END For File Upload
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -52,7 +71,6 @@ namespace NetCoreApi
             {
                 endpoints.MapControllers();
             });
-            app.UseCors(a => a.SetIsOriginAllowed(x =>_= true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
         }
     }
 }
