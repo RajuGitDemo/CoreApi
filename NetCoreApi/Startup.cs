@@ -53,7 +53,7 @@ namespace NetCoreApi
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(a => a.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-            ///FOr File Upload /// 
+            ///FOr File Upload /// //
             app.UseStaticFiles();
             //app.UseStaticFiles(new StaticFileOptions()
             //{
