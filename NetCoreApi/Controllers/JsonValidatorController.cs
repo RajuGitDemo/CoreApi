@@ -70,10 +70,11 @@ namespace NetCoreApi.Controllers
 
         }
 
-        public class ServiceResult
-        {
-            public int StatusCode { get; set; }
-            public object Content { get; set; }
-        }
+       
+    }
+    public class ServiceResult
+    {
+        public int StatusCode { get; set; }
+        public object Content { get; set; }
     }
 }
