@@ -9,6 +9,7 @@ using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using System.Text;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NetCoreApi.Controllers
@@ -152,14 +153,32 @@ namespace NetCoreApi.Controllers
 
         [Route("ValidateJson")]
         [HttpPost]
-        public async Task<string> Post([FromForm] FileUpload objfile)
+        public async Task<Object> Post([FromForm] FileUpload objfile)
         {
-            //List<EmployeeD> empList = JsonConvert.DeserializeObject<List<EmployeeD>>(objfile.Employees);
-            if (objfile.files.Length > 0)
-            {
+            // Only get files that begin with the letter "c".
+            //string[] dirs = Directory.GetFiles(@"c:\", "*c");
+            // string txtPath = Path.Combine(Environment.CurrentDirectory, "qrreport_FTPA2000-260_1181640-001.csv");
+            //StringBuilder sb = new StringBuilder();
+            ////List<EmployeeD> empList = JsonConvert.DeserializeObject<List<EmployeeD>>(objfile.Employees);
+            //if (objfile.files.Length > 0)
+            //{
 
+            //    sb.Append(objfile);
+            //}
+            //return "test";
+
+            var csv = new List<string[]>();
+            var full = Path.GetFullPath(objfile.files.FileName); 
+            if (System.IO.File.Exists(objfile.files.FileName))
+            {
+                var lines = System.IO.File.ReadAllLines(full);
+                foreach (string line in lines)
+                {
+                    csv.Add(line.Split(','));
+                }
             }
-            return "";
+                      
+            return JsonConvert.SerializeObject(csv);            
 
         }
 
